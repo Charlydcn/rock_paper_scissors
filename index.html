@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/style.css">
+    <title>Rock Paper Scissors</title>
+</head>
+<body>
+    
+    <h1>Rock Paper Scissors</h1>
+
+    <ul id="menu">
+        <li>
+            <button id="play-btn">
+                Start game
+            </button>
+        </li>
+        <li>
+            <button id="match-history-btn">
+                Match history
+            </button>
+        </li>
+    </ul>
+
+    <div id="game">
+        <p class="score">
+            <span class="user-score">0</span>
+            &nbsp;-&nbsp;
+            <span class="bot-score">0</span>
+        </p>
+
+        <ul id="user-options">
+            <h2><i class="fa-solid fa-user"></i></h2>
+            <li class="option rock fa-solid fa-hand-back-fist"></li>
+            <li class="option paper fa-solid fa-hand"></li>
+            <li class="option scissors fa-solid fa-hand-peace"></li>
+        </ul>
+
+        <h3>VS</h3>
+
+        <ul id="bot-options">
+            <h2><i class="fa-solid fa-robot"></i></h2>
+            <li class="option rock fa-solid fa-hand-back-fist"></li>
+            <li class="option paper fa-solid fa-hand"></li>
+            <li class="option scissors fa-solid fa-hand-peace"></li>
+        </ul>
+    </div>
+
+    <div id="matchHistoryContainer"></div>
+    <div id="overlay" class="hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
