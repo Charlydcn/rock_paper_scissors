@@ -31,16 +31,16 @@ h3 {
 }
 
 .hidden {
-    display:none;
+    display: none;
 }
 
 #overlay {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgb(0, 0, 0, .6);
+    background-color: rgb(0, 0, 0, 0.6);
     z-index: 2;
-    top:0;
+    top: 0;
 }
 
 #game {
@@ -57,7 +57,7 @@ h3 {
     border: 1px solid rgb(0 0 0 / 20%);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     align-items: center;
-    position:relative;
+    position: relative;
 }
 
 .score {
@@ -78,18 +78,18 @@ h3 {
 }
 
 #user-options:hover > li:not(:hover) {
-    opacity: .2;
+    opacity: 0.2;
 }
 
 .option {
     font-size: 5rem;
     color: var(--text-color);
-    margin:1rem;
+    margin: 1rem;
     user-select: none;
+    transition: transform 0.3s, opacity 0.3s;
 }
 
 #user-options li {
-    transition: transform .3s, opacity .3s;
     cursor: pointer;
     rotate: 90deg;
 }
@@ -100,16 +100,32 @@ h3 {
 
 #bot-options li {
     transform: scale(-1, 1);
-    rotate: -90deg
+    rotate: -90deg;
+}
+
+.user-option.selected {
+    transform: translateY(-4rem) !important;
+}
+
+.user-option.win {
+    transform: translateY(-15rem) !important;
+}
+
+.bot-option.selected {
+    transform: scale(-1, 1) translateY(-4rem) !important;
+}
+
+.bot-option.win {
+    transform: scale(-1, 1) translateY(-15rem) !important;
 }
 
 #matchHistoryContainer {
-    width: 40%;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 3;
+    overflow:auto;
 }
 
 #matchHistoryContainer table {
@@ -122,7 +138,7 @@ h3 {
 }
 
 #matchHistoryContainer table th {
-    padding: .25rem 3rem;
+    padding: 0.25rem 3rem;
     border: 1px solid rgb(0 0 0 / 20%);
 }
 
@@ -131,4 +147,54 @@ h3 {
     top: 0.25rem;
     right: 0.5rem;
     font-size: 1.5rem;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    align-items: center;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-content img {
+    width: min(20rem, 100%);
+}
+
+.modal-content p {
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    font-size: 3rem;
+    font-weight: bold;
+    top: 0;
+    right: 1rem;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

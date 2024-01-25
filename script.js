@@ -4,12 +4,14 @@ const game = document.querySelector('#game');
 const userOptions = document.querySelectorAll('#user-options li');
 const overlay = document.querySelector('#overlay')
 const closeBtn = document.querySelector('#matchHistoryContainer table .fa-xmark')
-
-const botChoice = document.createElement('i');
-botChoice.classList.add('fa-solid');
+const clearHistoryBtn = document.querySelector('#clear-history-btn')
 
 playBtn.addEventListener('click', () => {
-    game.classList.add('active');
+    if(game.classList.contains('active')) {
+        reload();
+    } else {
+        game.classList.add('active');
+    }
 })
 
 matchHistoryBtn.addEventListener('click', () => {
@@ -21,44 +23,62 @@ matchHistoryBtn.addEventListener('click', () => {
     overlay.classList.remove('hidden');
 })
 
+clearHistoryBtn.addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear the match history ?')) {
+        clearMatchHistory();
+    }
+});
+
 overlay.addEventListener('click', () => {
     const matchHistory = document.querySelector('#matchHistoryContainer')
 
     overlay.classList.add('hidden');
-    matchHistory.classList.add('hidden')
-})
-
-closeBtn.addEventListener('click', () => {
-    overlay.classList.add('hidden');
     matchHistory.classList.add('hidden');
 })
 
+let canClick = true;
+
 userOptions.forEach((userOption) => {
     userOption.addEventListener('click', () => {
-        const userScoreElement = document.querySelector('.user-score');
-        let userScore = parseInt(userScoreElement.innerHTML);
-
-        const botScoreElement = document.querySelector('.bot-score');
-        let botScore = parseInt(botScoreElement.innerHTML);
-
-        if(userScore >= 2 || botScore >= 2) {
+        if (!canClick) {
             return;
         }
 
-        if(playRound(userOption.classList[1], getBotOption()) == 'user') {
-            userScore++
-        } else if (playRound(userOption.classList[1], getBotOption()) == 'bot') {
-            botScore++
-        }
+        canClick = false;
 
-        checkIfWin(userScore, botScore);
-        
-        userScoreElement.innerHTML = userScore.toString();
-        botScoreElement.innerHTML = botScore.toString();
+        const botOption = getBotOption();
+        const botOptionElement = document.getElementsByClassName(`bot-option ${botOption}`)
 
-        
-        
-    })
+        showOption(userOption);
+        showOption(botOptionElement[0]);
+
+        setTimeout(() => {
+            const userScoreElement = document.querySelector('.user-score');
+            let userScore = parseInt(userScoreElement.innerHTML);
+    
+            const botScoreElement = document.querySelector('.bot-score');
+            let botScore = parseInt(botScoreElement.innerHTML);
+    
+            if (userScore >= 2 || botScore >= 2) {
+                canClick = true;
+                return;
+            }
+    
+            if (playRound(userOption.classList[2], botOption) == 'user') {
+                userScore++
+            } else if (playRound(userOption.classList[2], botOption) == 'bot') {
+                botScore++
+            }
+
+            checkIfWin(userScore, botScore);
+            
+            userScoreElement.innerHTML = userScore.toString();
+            botScoreElement.innerHTML = botScore.toString();
+
+            canClick = true;
+
+        }, 1000);
+    });
 });
 
 function playRound(userOption, botOption) {
@@ -68,14 +88,17 @@ function playRound(userOption, botOption) {
         case 'rock':
             if(botOption == 'scissors') {
                 // USER WIN
+                // console.log(`You win ! ${userOption} VS ${botOption}`)
                 roundWinner = "user";
 
             } else if (botOption == 'paper') {
                 // LOOSE
+                // console.log(`You loose.. ${userOption} VS ${botOption}`)
                 roundWinner = "bot";
 
             } else {
                 // DRAW
+                // console.log(`It's a draw ! ${userOption} VS ${botOption}`)
                 roundWinner = "draw";
             }
             break;
@@ -83,14 +106,17 @@ function playRound(userOption, botOption) {
         case 'paper':
             if(botOption == 'rock') {
                 // USER WIN
+                // console.log(`You win ! ${userOption} VS ${botOption}`)
                 roundWinner = "user";
 
             } else if (botOption == 'scissors') {
                 // LOOSE
+                // console.log(`You loose.. ${userOption} VS ${botOption}`)
                 roundWinner = "bot";
 
             } else {
                 // DRAW
+                // console.log(`It's a draw ! ${userOption} VS ${botOption}`)
                 roundWinner = "draw";
 
             }
@@ -99,14 +125,17 @@ function playRound(userOption, botOption) {
         case 'scissors':
             if(botOption == 'paper') {
                 // USER WIN
+                // console.log(`You win ! ${userOption} VS ${botOption}`)
                 roundWinner = "user";
 
             } else if (botOption == 'rock') {
                 // LOOSE
+                // console.log(`You loose.. ${userOption} VS ${botOption}`)
                 roundWinner = "bot";
 
             } else {
                 // DRAW
+                // console.log(`It's a draw ! ${userOption} VS ${botOption}`)
                 roundWinner = "draw";
 
             }
@@ -123,32 +152,24 @@ function playRound(userOption, botOption) {
 function getBotOption() {
     const options = ['rock', 'paper', 'scissors'];
     const option = options[Math.floor(Math.random() * 3)];
-    let result = "";
 
-    switch (option) {
-        case 'rock':
-            botChoice.classList.remove('fa-hand', 'fa-hand-peace')
-            botChoice.classList.add('fa-hand-back-fist')
-            result = 'rock';
-            break;
-    
-        case 'paper':
-            botChoice.classList.remove('fa-hand-back-fist', 'fa-hand-peace')
-            botChoice.classList.add('fa-hand')
-            result = 'paper';
-            break;
-    
-        case 'scissors':
-            botChoice.classList.remove('fa-hand', 'fa-hand-back-fist')
-            botChoice.classList.add('fa-hand-peace')
-            result = 'scissors';
-            break;
-    
-        default:
-            break;
-    }
+    return option;
+}
 
-    return result;
+function showOption(option) {
+    option.classList.add('selected');
+
+    setTimeout(() => {
+        option.classList.remove('selected');
+    }, 1000);
+}
+
+function showWinnerOption(option) {
+    option.classList.add('win');
+
+    setTimeout(() => {
+        option.classList.remove('win');
+    }, 1000);
 }
 
 function checkIfWin(userScore, botScore) {
@@ -156,8 +177,14 @@ function checkIfWin(userScore, botScore) {
         let winner = '';
 
         if (userScore > botScore) {
+            setTimeout(() => {
+                showResult("You win ! :)");
+            }, 1000)
             winner = 'user';
         } else {
+            setTimeout(() => {
+                showResult("You loose.. :(");
+            }, 1000)
             winner = 'bot';
         }
 
@@ -182,10 +209,6 @@ function checkIfWin(userScore, botScore) {
         // store this JSON string in localStorage to maintain the game history between sessions
         localStorage.setItem('matchHistory', jsonArray);
 
-
-        console.table(matchHistory);
-
-        console.log('Winner = ' + winner);
         return;
     }
 }
@@ -242,4 +265,34 @@ function displayMatchHistory() {
 
     tableContainer.innerHTML = '';
     tableContainer.appendChild(table);
+}
+
+function clearMatchHistory() {
+    window.localStorage.clear();
+}
+
+function showResult(text) {
+    var modal = document.getElementById("myModal");
+    var modalText = document.querySelector(".modal-content p")
+    var modalImg = modal.querySelector('img')
+    var span = document.getElementsByClassName("close")[0];
+
+    if(text == "You win ! :)") {
+        modalImg.src = "/win.jpg";
+    } else {
+        modalImg.src = "/loose.png";
+    }
+
+    modal.style.display = "flex";
+    modalText.innerHTML = text;
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 }
